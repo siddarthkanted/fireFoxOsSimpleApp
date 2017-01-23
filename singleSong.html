@@ -22,8 +22,8 @@
     <!-- This code is in the public domain. Enjoy! -->
     <h1>Single Song</h1>
 	<h3 id="songNameH3Id"></h3>
-	<a href="/index.html">Back</a>
-	<a href="/singleSong.html" id="playAnchorId">Play</a>	
+	<a href="index.html">Back</a>
+	<a href="#" id="playAnchorId">Play</a>	
 	<a href="#" onclick="addToFavouritesOnClick()">Add to favourites</a>
 	<a href="#" onclick="removeFromFavouriteOnClick()">Remove from favourites</a>
 	<a href="#" onclick="viewAllFavouriteOnClick()">View all favourites</a>
@@ -55,14 +55,14 @@
   	if (typeof(Storage) !== "undefined") {
   		return true;
   	} else {
-  		document.getElementById("informationH4Id").innerText = "Sorry, your browser does not support Web Storage...";
+  		document.getElementById("informationH4Id").textContent = "Sorry, your browser does not support Web Storage...";
   		return false;
   	}
   };
 
   var updateSongName = function () {
   	var songName = getUrlParameter("songName");
-  	document.getElementById("songNameH3Id").innerText = songName;
+  	document.getElementById("songNameH3Id").textContent = songName;
   	document.getElementById("playAnchorId").href = encodeURI("https://www.bing.com/search?q=" + songName);
   };
   
@@ -80,9 +80,11 @@
   	if (isLocalStorageSupported()) {
 		var storedNames = getFavouritesArray();
 		var songName = getUrlParameter("songName");
+		var index = storedNames.indexOf(songName);
+		if(index<0)
 		storedNames.push(songName);
 		localStorage.setItem("favourites", JSON.stringify(storedNames));
-		document.getElementById("informationH4Id").innerText = "Song "+ songName+ " is added to favourite";
+		document.getElementById("informationH4Id").textContent = "Song "+ songName+ " is added to favourite";
 	}
   };
 
@@ -91,17 +93,17 @@
 		var storedNames = getFavouritesArray();
 		var songName = getUrlParameter("songName");
 		var index = storedNames.indexOf(songName);
-		if(index>0)
+		if(index>=0)
 		storedNames.splice(index, 1);
 		localStorage.setItem("favourites", JSON.stringify(storedNames));
-		document.getElementById("informationH4Id").innerText = "Song "+ songName+ " is added to favourite";
+		document.getElementById("informationH4Id").textContent = "Song "+ songName+ " is added to favourite";
 	}
   };
 
   var viewAllFavouriteOnClick = function () {
   	if (isLocalStorageSupported()) {
 			var storedNames = getFavouritesArray();
-				document.getElementById("informationH4Id").innerText = storedNames;
+				document.getElementById("informationH4Id").textContent = storedNames;
 	}	
   };
 
