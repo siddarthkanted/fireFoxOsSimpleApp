@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1">
+
+    <title>Single Song</title>
+
+    <style>
+      body {
+        border: 1px solid black;
+      }
+    </style>
+
+    <!-- Inline scripts are forbidden in Firefox OS apps (CSP restrictions),
+         so we use a script file. -->
+    <script src="app.js" defer></script>
+
+  </head>
+
+  <body>
+    <!-- This code is in the public domain. Enjoy! -->
+    <h1>Single Song</h1>
+	<h3 id="songNameH3Id"></h3>
+	<a href="/index.html">Back</a>
+	<a href="/singleSong.html" id="playAnchorId">Play</a>	
+	<a href="#" onclick="addToFavouritesOnClick()">Add to favourites</a>
+	<a href="#" onclick="removeFromFavouriteOnClick()">Remove from favourites</a>
+	<a href="#" onclick="viewAllFavouriteOnClick()">View all favourites</a>
+	<h4 id="informationH4Id"></h4>
+  </body>
+  
+   <script type = "text/javascript">
+
+  	window.onload = function () {
+  	updateSongName();
+  };
+
+  var getUrlParameter = function getUrlParameter(sParam) {
+  	var sPageURL = decodeURIComponent(window.location.search.substring(1)),
+  	sURLVariables = sPageURL.split('&'),
+  	sParameterName,
+  	i;
+
+  	for (i = 0; i < sURLVariables.length; i++) {
+  		sParameterName = sURLVariables[i].split('=');
+
+  		if (sParameterName[0] === sParam) {
+  			return sParameterName[1] === undefined ? true : sParameterName[1];
+  		}
+  	}
+  };
+
+  var isLocalStorageSupported = function () {
+  	if (typeof(Storage) !== "undefined") {
+  		return true;
+  	} else {
+  		document.getElementById("informationH4Id").innerText = "Sorry, your browser does not support Web Storage...";
+  		return false;
+  	}
+  };
+
+  var updateSongName = function () {
+  	var songName = getUrlParameter("songName");
+  	document.getElementById("songNameH3Id").innerText = songName;
+  	document.getElementById("playAnchorId").href = encodeURI("https://www.bing.com/search?q=" + songName);
+  };
+  
+  var getFavouritesArray = function(){
+  if (isLocalStorageSupported()) {
+		var storedNames = JSON.parse(localStorage.getItem("favourites"));
+		if(null == storedNames){
+		storedNames= [];
+		}
+		return storedNames;
+	}
+  };
+
+  var addToFavouritesOnClick = function () {
+  	if (isLocalStorageSupported()) {
+		var storedNames = getFavouritesArray();
+		var songName = getUrlParameter("songName");
+		storedNames.push(songName);
+		localStorage.setItem("favourites", JSON.stringify(storedNames));
+		document.getElementById("informationH4Id").innerText = "Song "+ songName+ " is added to favourite";
+	}
+  };
+
+  var removeFromFavouriteOnClick = function () {
+  	if (isLocalStorageSupported()) {
+		var storedNames = getFavouritesArray();
+		var songName = getUrlParameter("songName");
+		var index = storedNames.indexOf(songName);
+		if(index>0)
+		storedNames.splice(index, 1);
+		localStorage.setItem("favourites", JSON.stringify(storedNames));
+		document.getElementById("informationH4Id").innerText = "Song "+ songName+ " is added to favourite";
+	}
+  };
+
+  var viewAllFavouriteOnClick = function () {
+  	if (isLocalStorageSupported()) {
+			var storedNames = getFavouritesArray();
+				document.getElementById("informationH4Id").innerText = storedNames;
+	}	
+  };
+
+  </script>
+
+</html>
